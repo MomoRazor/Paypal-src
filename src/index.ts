@@ -45,7 +45,7 @@ app.post('/captureOrder', async (req, res) => {
 });
 
 app.get('/', (_, res) => {
-    res.send('Hello from my Mailgun Service!');
+    res.send('Hello from my Paypal Service!');
 });
 
 const PORT = process.env.PORT || 8080;
