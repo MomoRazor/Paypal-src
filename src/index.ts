@@ -1,4 +1,5 @@
 import express from 'express';
+import { json } from 'body-parser';
 import { bouncer } from './middleware';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -10,12 +11,18 @@ app.use(cors());
 app.use(helmet());
 app.use(bouncer);
 
-app.post('/createOrder', async (req, res) => {
+app.post('/createOrder', json(), async (req, res) => {
     if (req.body.paypalId && req.body.paypalSecret) {
         if (req.body.purchaseUnits && req.body.purchaseUnits.length > 0) {
             try {
-                await createOrder(req.body.paypalId, req.body.paypalSecret, req.body.purchaseUnits);
-                res.send('Successfully created Order!');
+                const order = await createOrder(
+                    req.body.paypalId,
+                    req.body.paypalSecret,
+                    req.body.purchaseUnits
+                );
+                res.json({
+                    order: order
+                });
             } catch (e) {
                 res.status(500).send(e);
             }
@@ -27,7 +34,7 @@ app.post('/createOrder', async (req, res) => {
     }
 });
 
-app.post('/captureOrder', async (req, res) => {
+app.post('/captureOrder', json(), async (req, res) => {
     if (req.body.paypalId && req.body.paypalSecret) {
         if (req.body.orderId) {
             try {
