@@ -24,12 +24,15 @@ app.post('/createOrder', json(), async (req, res) => {
                     order: order
                 });
             } catch (e) {
+                console.error(e);
                 res.status(500).send(e);
             }
         } else {
+            console.error('Purchase Units Missing');
             res.status(400).send('Purchase Units Missing');
         }
     } else {
+        console.error('Required Credentials Missing');
         res.status(400).send('Required Credentials Missing');
     }
 });
@@ -41,12 +44,15 @@ app.post('/captureOrder', json(), async (req, res) => {
                 await captureOrder(req.body.paypalId, req.body.paypalSecret, req.body.orderId);
                 res.send('Successfully captured Order!');
             } catch (e) {
+                console.error(e);
                 res.status(500).send(e);
             }
         } else {
+            console.error('Order Id Missing');
             res.status(400).send('Order Id Missing');
         }
     } else {
+        console.error('Required Credentials Missing');
         res.status(400).send('Required Credentials Missing');
     }
 });
