@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { SERVICE_PROVIDER_DOMAINS } from './enviornment';
+import { API_KEY } from './enviornment';
 
 export const bouncer = (req: Request, res: Response, next: NextFunction) => {
-    if (SERVICE_PROVIDER_DOMAINS) {
-        const verifiedDomains = SERVICE_PROVIDER_DOMAINS.split(',');
-        if (verifiedDomains.includes(req.header('Origin') || '')) {
+    if (API_KEY) {
+        if (API_KEY === req.headers.authorization) {
             next();
         } else {
-            console.error('Locked to specific Service Provider');
-            res.status(401).end('Locked to specific Service Provider');
+            console.error('Missing Token');
+            res.status(401).end('Missing Token');
         }
     } else {
         next();
